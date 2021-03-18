@@ -1,4 +1,3 @@
-# IMPORT SECTION
 import pandas as pd
 import yfinance as yf
 import dbMod  # my database module
@@ -12,10 +11,9 @@ pd.options.display.max_rows = None
 
 fname = "reddit_wsb.csv"    # csv filename
 sname = "GME"               # stock id
-
 st_date = "2021-01-28"  # start date of analysis
-end_date = "2021-02-20" # end date of analysis
-
+end_date = "2021-02-20"  # end date of analysis
+wc_date = pd.to_datetime("2021-01-29").date()   # date for wordcloud analysis, date of highest post count
 db_api = 'A'  # flag to switch between using DB(D) or yfinance API(A)
 
 # FUNCTIONS SECTION
@@ -103,6 +101,8 @@ wsb_data_final = format_data(wsb_data)
 # call the aggregate_data function to merge and agg data
 mergedDF = aggregate_data(wsb_data_final,stock_data)
 
+print(mergedDF)
+
 # Final Datasets for Visualization
 # mergedDF for dual Axis and Num posts line chart
 # stock_data for high/low chart , candlestick
@@ -113,10 +113,17 @@ mergedDF = aggregate_data(wsb_data_final,stock_data)
 # Num posts line chart
 visMod.show_num_posts(mergedDF)
 
+# plot of high and low stock price
 visMod.show_high_low_plot(stock_data)
 
+# Candlestick chart of stock prices
 visMod.show_candlestick(stock_data)
 
+# Plot with Dual Axis  Posts by High Price
 visMod.show_dual_axis_corr(mergedDF)
 
-visMod.show_wc_sentiment(wsb_data_final.title)
+# Plot a scatter to show correlation
+visMod.show_scatter(mergedDF)
+
+# show poster sentiment , but only for the date with the highest post count
+visMod.show_wc_sentiment(wsb_data_final.title.loc[wc_date])

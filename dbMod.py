@@ -22,7 +22,7 @@ try:
 except cx_Oracle.Error as error:
     print(error)
 finally:
-    # release the connection
+    # close the connection
     if connection:
         connection.close()
 
